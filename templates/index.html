@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Tính điểm tốt nghiệp THPT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background: linear-gradient(120deg, #e0f7fa 0%, #f8bbd0 100%);
+            margin: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 750px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 32px 28px 24px 28px;
+            border-radius: 18px;
+            box-shadow: 0 6px 32px rgba(44,62,80,0.13);
+        }
+        h2 {
+            color: #d81b60;
+            text-align: center;
+            margin-bottom: 18px;
+            font-size: 2.1rem;
+            letter-spacing: 1px;
+        }
+        table {
+            width: 100%;
+            margin-bottom: 18px;
+            border-collapse: separate;
+            border-spacing: 0 6px;
+        }
+        th {
+            background: #fce4ec;
+            color: #ad1457;
+            font-size: 1.08rem;
+            border-radius: 8px 8px 0 0;
+            padding: 7px 0;
+        }
+        td {
+            padding: 6px 0;
+        }
+        input[type=number] {
+            width: 60px;
+            padding: 5px 3px;
+            border: 1px solid #bdbdbd;
+            border-radius: 6px;
+            font-size: 1rem;
+            text-align: center;
+            transition: border 0.2s;
+        }
+        input[type=number]:focus {
+            border: 1.5px solid #d81b60;
+            outline: none;
+        }
+        label {
+            font-weight: 500;
+            color: #333;
+        }
+        .btn {
+            background: linear-gradient(90deg, #43cea2 0%, #185a9d 100%);
+            color: #fff;
+            padding: 12px 32px;
+            border: none;
+            border-radius: 7px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            box-shadow: 0 2px 8px #b2dfdb44;
+            transition: background 0.2s, transform 0.15s;
+        }
+        .btn:hover {
+            background: linear-gradient(90deg, #185a9d 0%, #43cea2 100%);
+            transform: translateY(-2px) scale(1.03);
+        }
+        .result {
+            background: #f1f8e9;
+            padding: 18px 20px;
+            border-radius: 10px;
+            margin-top: 24px;
+            font-size: 1.08rem;
+            color: #33691e;
+            box-shadow: 0 2px 8px #c8e6c944;
+        }
+        .error {
+            color: #d32f2f;
+            font-weight: 700;
+        }
+        @media (max-width: 600px) {
+            .container { padding: 10px 2vw; }
+            table, th, td { font-size: 0.98rem; }
+            .btn { width: 100%; }
+        }
+        .note {
+            font-size: 0.98rem;
+            color: #888;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        h5 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Tính điểm tốt nghiệp THPT</h2>
+    <div class="note">Nhập điểm các môn (0-10), tổng điểm khuyến khích và ưu tiên nếu có.</div>
+    <form method="post">
+        <table border="0">
+            <tr><th colspan="7">Nhập điểm 7 môn lớp 10</th></tr>
+            <tr>
+                {% for i in range(1,8) %}
+                <td><input type="number" step="0.01" min="0" max="10" name="lop10_{{i}}" required placeholder="Môn {{i}}"></td>
+                {% endfor %}
+            </tr>
+            <tr><th colspan="7">Nhập điểm 7 môn lớp 11</th></tr>
+            <tr>
+                {% for i in range(1,8) %}
+                <td><input type="number" step="0.01" min="0" max="10" name="lop11_{{i}}" required placeholder="Môn {{i}}"></td>
+                {% endfor %}
+            </tr>
+            <tr><th colspan="7">Nhập điểm 7 môn lớp 12</th></tr>
+            <tr>
+                {% for i in range(1,8) %}
+                <td><input type="number" step="0.01" min="0" max="10" name="lop12_{{i}}" required placeholder="Môn {{i}}"></td>
+                {% endfor %}
+            </tr>
+        </table>
+        <div style="margin: 10px 0 18px 0;">
+            <label>Tổng điểm khuyến khích (nếu có): <input type="number" step="0.01" min="0" name="diem_kk" value="0"></label>
+            &nbsp;&nbsp;
+            <label>Điểm ưu tiên (nếu có): <input type="number" step="0.01" min="0" name="diem_ut" value="0"></label>
+        </div>
+        <button class="btn" type="submit">Tính điểm</button>
+    </form>
+    {% if result %}
+        <div class="result">
+            {% if result.error %}
+                <div class="error">Lỗi: {{ result.error }}</div>
+            {% else %}
+                <b>Điểm trung bình lớp 10:</b> {{ '%.2f' % result.tb_lop_10 }}<br>
+                <b>Điểm trung bình lớp 11:</b> {{ '%.2f' % result.tb_lop_11 }}<br>
+                <b>Điểm trung bình lớp 12:</b> {{ '%.2f' % result.tb_lop_12 }}<br>
+                <b>Điểm trung bình các năm học:</b> {{ '%.2f' % result.diem_tot_nghiep }}<br><br>
+                <b>Tổng điểm 4 môn thi cần đạt:</b> {{ '%.2f' % result.tong_diem_4_mon }}<br>
+                <b>Điểm trung bình 4 môn thi cần đạt:</b> {{ '%.2f' % result.diem_trung_binh_can_dat }}<br>
+                {% if result.diem_trung_binh_can_dat <= 0 %}
+                    <span style="color:green">Bạn đã đủ điểm tốt nghiệp ngay cả khi điểm 4 môn thi bằng 0!</span>
+                {% elif result.diem_trung_binh_can_dat > 10 %}
+                    <span style="color:red">Không thể đạt đủ điểm tốt nghiệp với các điểm hiện tại (vì điểm trung bình cần đạt vượt quá 10).</span>
+                {% endif %}
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+<div>
+    <h5>&copy;Le Ma Anh Duc, NO coppyright - Contact: 0948.601.613</h5>
+    <h5>Sản phẩm này chỉ dùng cho các bạn đang theo học tại Sonadazi College </h5>
+</div>
+</body>
+</html>
