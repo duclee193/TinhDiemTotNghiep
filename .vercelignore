@@ -1,0 +1,15 @@
+build/
+tinhdiemtotnghiep_gui.py
+tinhdiemtotnghiep_gui.spec
+TinhDiemTotNghiep.spec
+tinhdiemtotnghiep.py
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+*.so
+.idea/
+.DS_Store
